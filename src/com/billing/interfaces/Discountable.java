@@ -1,5 +1,5 @@
 package com.billing.interfaces;
 
-public class Discountable {
-
+public interface Discountable {
+	double calculateDiscount();
 }
