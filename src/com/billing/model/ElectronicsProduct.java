@@ -1,6 +1,6 @@
 package com.billing.model;
 import com.billing.interfaces.*;
-import com.billing.model.*;
+//import com.billing.model.*;
 
 public class ElectronicsProduct extends Product implements Taxable,Discountable {
 	
