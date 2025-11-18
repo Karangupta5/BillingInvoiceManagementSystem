@@ -1,19 +1,20 @@
 package com.billing.model;
 import com.billing.interfaces.*;
 
-abstract class Product implements Taxable,Discountable {
+public abstract class Product implements Taxable,Discountable {
 	private int productId;
-	private String name;
+	private String name,category;
 	private double price;
 	private static int counter=1;
 	
 	public Product() {
 		
 	}
-	public Product(String name,double price) {
+	public Product(String name,double price,String category) {
 		this.productId=counter++;
 		this.name=name;
 		this.price=price;
+		this.category=category;
 	}
 	public int getProductId() {
 		return productId;
@@ -29,6 +30,13 @@ abstract class Product implements Taxable,Discountable {
 	}
 	public void setPrice(double price) {
 		this.price = price;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+	public void setCategory(String category) {
+		this.category = category;
 	}
 	@Override
 	public double calculateTax() {
