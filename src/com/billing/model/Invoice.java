@@ -1,45 +1,77 @@
 package com.billing.model;
+import java.time.LocalDateTime;
 import java.util.*;
 
 public class Invoice {
 	private int invoiceId;
 	private List<Product> items;
 	private double totalTax,totalDiscount,finalAmount,subTotal;
-	private static int counter=1;
-	String customerName;
+	private static int invoiceCounter=1;
+	private String customerName;
+	private LocalDateTime createdAt;
 	
 	public Invoice() {
 		this.items=new ArrayList<Product>();
-		this.invoiceId=counter++;
+		this.invoiceId=invoiceCounter++;
 		this.subTotal=0;
 		this.totalTax=0;
 		this.totalDiscount=0;
 		this.finalAmount=0;
+		this.createdAt = LocalDateTime.now();
 	}
 	public Invoice(String customerName){
-		this.items=new ArrayList<Product>();
 		this.customerName=customerName;
-		this.invoiceId=counter++;
+		this.items=new ArrayList<Product>();
+		this.invoiceId=invoiceCounter++;
 		this.subTotal=0;
 		this.totalTax=0;
 		this.totalDiscount=0;
 		this.finalAmount=0;
+		this.createdAt = LocalDateTime.now();
 	}
+	
+	public int getInvoiceId() {
+        return invoiceId;
+    }
+
+    public List<Product> getItems() {
+        return items;
+    }
+
+    public double getSubTotal() {
+        return subTotal;
+    }
+
+    public double getTotalTax() {
+        return totalTax;
+    }
+
+    public double getTotalDiscount() {
+        return totalDiscount;
+    }
+
+    public double getFinalAmount() {
+        return finalAmount;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
 	
 	public void addProduct(Product p) {
 		if(p!=null){ 
 			items.add(p);
+			recalculateTotals();
 			System.out.println("Product added successfully");
 		}
 	}
 	public void removeProductById(int id) {
-		for(Product p:items) {
-			if(p.getProductId()==id) {
-				System.out.println(p);
-				return;
-			}
-		}
-		System.out.println("ProductId is not found \n");
+		 if (items == null || items.isEmpty()) return;
+	        boolean removed = items.removeIf(p -> p.getProductId() == id);
+	        if (removed) {
+	            recalculateTotals();
+	        }
 	}
 	public void recalculateTotals() {
 		subTotal=0;
@@ -53,10 +85,6 @@ public class Invoice {
 		}
 	}
 	
-	public double getFinalAmount() {
-		return finalAmount;
-	}
-	
 	public String generateInvoiceText() {
 		StringBuilder sb=new StringBuilder();
 		
@@ -65,7 +93,7 @@ public class Invoice {
 	    sb.append("Customer: ").append(customerName != null ? customerName : "N/A").append("\n");
 	    sb.append("--------------------------------\n");
 
-	    if (items.isEmpty()) sb.append("No items in this invoice.\n");
+	    if (items==null) sb.append("No items in this invoice.\n");
 	    else{
 	        sb.append(String.format("%-5s %-15s %-10s %-10s %-10s\n",
 	                "ID", "Name", "Price", "Tax", "Discount"));
@@ -91,4 +119,8 @@ public class Invoice {
 
 		return sb.toString();
 	}
+	@Override
+    public String toString() {
+        return String.format("Invoice[%d] items=%d final=%.2f", invoiceId, items.size(), finalAmount);
+    }
 }
